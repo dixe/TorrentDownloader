@@ -1,0 +1,16 @@
+Have a config like file, with a list of shows to download, and the current episode
+download all newer episodes of every show, and increase the current episode for them.
+
+Req:
+Must be able to start utorrent with the command: utorrent.exe "magnetlink"
+
+TODO:
+update config file if the current episode was downloaded
+fix stopping when hitting empty magnet error
+
+
+DONE
+find html url from config file with list of shows, with season and episode number
+download htmlbody to html.txt given link
+start torrent given magnet link
+parse html to find magnet link, given season and epispode number
