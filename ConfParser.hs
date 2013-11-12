@@ -2,7 +2,7 @@
 -- the config file is lines with atributes title, season and episode, with :
 -- attributes names end with : and are seperated with ,
 
-module ConfParser(createSearchT, readConfig, writeConfig) where
+module ConfParser(createSearchT, readConfig, writeConfig,toFileString) where
 
 import Data.List.Split (splitOn)
 import ConfigData

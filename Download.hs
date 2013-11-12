@@ -13,7 +13,7 @@ import Control.Concurrent
 -- Takes a url and save the body in html.txt
 downloadHtml url = do
   let htmlCommand = "python pyGet.py " ++ (formatUrl url)
-  handle <- (runCommand htmlCommand) -- save the html to html.txt
+  handle <- runCommand htmlCommand -- save the html to html.txt
   waitForProcess handle
   print htmlCommand
 

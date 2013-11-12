@@ -14,15 +14,20 @@ import Control.Exception.Base
 import System.IO.Error
 import System.Exit
 import ConfigData
+import ConfigChanger
 
 --takes a magnet link, start downloading the torrent via utorrent
+
 startMagnet magnet = if magnet == ""
                      then Nothing
                      else Just (sMagnet magnet)
 
+
 sMagnet magnet = do
   let torrentCommand = "utorrent \"" ++ magnet ++ "\""
   runCommand torrentCommand -- starts utorrent and download the file in magnet url
+
+
 
 -- can be change to later to use commandline flags for different behavior
 main = do
@@ -32,6 +37,10 @@ main = do
 runEmpty = do
   runCommand ""
 
+
+rs = do
+  handle <- runCommand ""
+  getProcessExitCode handle
 
 
 getUrls :: [Download] -> [String]
@@ -44,6 +53,8 @@ downloadT = do
   downloads <- readConfig
   let urls = getUrls downloads
   startTorrent urls
+  print downloads
+  writeConfig "tmp.conf" (map add1Episode downloads)
 
 startTorrent (url:us) = do
   downloadHtml url
@@ -54,3 +65,5 @@ startTorrent (url:us) = do
   startTorrent us
 startTorrent [] = do
   print "Done"
+
+test = [DownData "" 1 1]
