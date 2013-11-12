@@ -9,25 +9,27 @@ import ParseHtml
 import ConfParser
 import Control.Monad.IO.Class (liftIO)
 import Control.Concurrent
+import Control.Exception
+import Control.Exception.Base
+import System.IO.Error
+import System.Exit
 
--- takes a magnet link, start downloading the torrent via utorrent
-startMagnet  magnet = if magnet /=""
-                      then sMagnet magnet
-                      else error "empty magnet"
+--takes a magnet link, start downloading the torrent via utorrent
+startMagnet magnet = if magnet == ""
+                     then Nothing
+                     else Just (sMagnet magnet)
 
 sMagnet magnet = do
   let torrentCommand = "utorrent \"" ++ magnet ++ "\""
-  handle <- runCommand torrentCommand -- starts utorrent and download the file in magnet url
-  waitForProcess handle
+  runCommand torrentCommand -- starts utorrent and download the file in magnet url
 
---tmp
-shUrl = "http://thepiratebay.sx" ++ "/search/how i met your mother s09e03/0/7/208"
-
---
+-- can be change to later to use commandline flags for different behavior
 main = do
-  downloads <- parseConfig
-  let urls = getUrls downloads
-  download urls
+  downloadT -- download the torrent specified in the config.conf file
+
+-- this as a hacked way of making things run
+runEmpty = do
+  runCommand ""
 
 
 
@@ -35,11 +37,19 @@ getUrls :: [Download] -> [String]
 getUrls (d:ds) = (createSearchUrl $ createSearchT d) : getUrls ds
 getUrls [] = []
 
-download (url:us) = do
+
+-- function to download torrent
+downloadT = do
+  downloads <- readConfig
+  let urls = getUrls downloads
+  startTorrent urls
+
+startTorrent (url:us) = do
   downloadHtml url
   magnet <- getMagnet
-  startMagnet magnet
-  download us
-
-download [] = do
+  let runMagnet (Just x) = x
+      runMagnet Nothing = runEmpty
+  exitCode <- runMagnet (startMagnet magnet)
+  startTorrent us
+startTorrent [] = do
   print "Done"
