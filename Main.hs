@@ -13,6 +13,7 @@ import Control.Exception
 import Control.Exception.Base
 import System.IO.Error
 import System.Exit
+import ConfigData
 
 --takes a magnet link, start downloading the torrent via utorrent
 startMagnet magnet = if magnet == ""
