@@ -57,8 +57,8 @@ downloadT = do
   writeConfig "tmp.conf" (map add1Episode downloads)
 
 startTorrent (url:us) = do
-  downloadHtml url
-  magnet <- getMagnet
+  html <-  downloadHtml url
+  let magnet = getMagnet html
   let runMagnet (Just x) = x
       runMagnet Nothing = runEmpty
   exitCode <- runMagnet (startMagnet magnet)
