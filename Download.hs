@@ -17,8 +17,5 @@ downloadHtml url =  simpleHTTP (getRequest ( formatUrl url)) >>=  getResponseBod
 -- replaces space with %20
 formatUrl = foldl (\acc x -> acc ++ (if isSpace x then "%20" else x:[] )) ""
 
--- given search term, creates the search url
+-- given search term, creates the search url//tpbunblocked.me/search/"++ term ++ "/0/7/208"
 createSearchUrl term = "http://tpbunblocked.me/search/"++ term ++ "/0/7/208"
-
-
-url = "http://www.tpbunblocked.me"

@@ -51,19 +51,24 @@ getUrls [] = []
 -- function to download torrent
 downloadT = do
   downloads <- readConfig
-  let urls = getUrls downloads
-  startTorrent urls
-  print downloads
-  writeConfig "tmp.conf" (map add1Episode downloads)
+  let urls = getUrls downloads --create the urls to download
+  m <-startTorrent urls [] -- get the magnet link and starts the torrent
+  let magnets =  reverse m -- now it is the samme as in the config
+  let upDatedDown = add1Episodes downloads magnets
+  writeConfig "config.conf" upDatedDown
 
-startTorrent (url:us) = do
+--startTorrnet :: [[Char]] -> [[Char]] -> IO [[Char]]
+startTorrent (url:us) mags= do
   html <-  downloadHtml url
   let magnet = getMagnet html
-  let runMagnet (Just x) = x
-      runMagnet Nothing = runEmpty
-  exitCode <- runMagnet (startMagnet magnet)
-  startTorrent us
-startTorrent [] = do
-  print "Done"
+  let runMagnet (Just x) = do x
+                              return True
+      runMagnet Nothing = do
+                          return False
+  mag <- runMagnet (startMagnet magnet)
+  startTorrent us (mag:mags)
+startTorrent [] mags= do
+  return mags
+
 
 test = [DownData "" 1 1]
