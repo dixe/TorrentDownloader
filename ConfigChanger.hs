@@ -19,5 +19,5 @@ add1Season Empty = Empty
 
 -- increment episode with 1
 add1Episode :: Download -> Download
-add1Episode (DownData title s e) = DownData title (s+1) e
+add1Episode (DownData title s e) = DownData title s (e+1)
 add1Episode Empty = Empty
